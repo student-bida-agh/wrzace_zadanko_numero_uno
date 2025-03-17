@@ -17,9 +17,13 @@ public class Node {
 
         //kiedy otrzyma wszystkie informacje od poprzedników wyślij polecenie w przód
         frontPropagateCounter++;
-        for(Node n : nextNodes) {
-            n.frontPropagate();
+        if(frontPropagateCounter == nextNodes.size()) {
+            frontPropagateCounter = 0;
+            for(Node n : nextNodes) {
+                n.frontPropagate();
+            }
         }
+
     }
     void backPropagate() {
         //obliczenia zadawane przez następników
@@ -28,8 +32,11 @@ public class Node {
 
         //kiedy otrzyma wszystkie informacje od następników wyślij polecenie w tył
         backPropagateCounter++;
-        for(Node n : previousNodes) {
-            n.backPropagate();
+        if(backPropagateCounter == previousNodes.size()) {
+            backPropagateCounter = 0;
+            for(Node n : previousNodes) {
+                n.backPropagate();
+            }
         }
     }
 }
