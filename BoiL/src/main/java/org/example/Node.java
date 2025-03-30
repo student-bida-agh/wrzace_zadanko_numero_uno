@@ -9,33 +9,82 @@ public class Node {
     private int frontPropagateCounter;
     private int backPropagateCounter;
 
+    private String name;
+    private double workTime;
 
-    void frontPropagate() {
+    private double earlyStartTime;
+    private double earlyEndTime;
+    private double lateStartTime;
+    private double lateEndTime;
+    private double reserveTime;
+    private boolean criticalPath;
+
+    Node(){
+        earlyStartTime = earlyEndTime = lateStartTime = lateEndTime = 0;
+        reserveTime = 0;
+    }
+
+    public double getEarlyEndTime() {
+        return earlyEndTime;
+    }
+
+    public double getEarlyStartTime() {
+        return earlyStartTime;
+    }
+
+    public double getLateStartTime() {
+        return lateStartTime;
+    }
+
+    public double getLateEndTime() {
+        return lateEndTime;
+    }
+
+    public void frontPropagate(Node previousNode) {
         //obliczenia zadawane przez poprzedników
 
-        //TODO
+        //znajdz early start
+        if(previousNode.getEarlyEndTime() > earlyEndTime) {
+            earlyStartTime = previousNode.getEarlyEndTime();
+        }
 
-        //kiedy otrzyma wszystkie informacje od poprzedników wyślij polecenie w przód
+        //kiedy otrzyma wszystkie informacje od wszystkich poprzedników
         frontPropagateCounter++;
         if(frontPropagateCounter == nextNodes.size()) {
             frontPropagateCounter = 0;
+            //ustal czas wczesnego końca
+            earlyEndTime = earlyStartTime + workTime;
+
+            //wyslij zapytanie w przód
             for(Node n : nextNodes) {
-                n.frontPropagate();
+                n.frontPropagate(this);
             }
         }
 
     }
-    void backPropagate() {
+    public void backPropagate(Node nextNode) {
         //obliczenia zadawane przez następników
 
-        //TODO
+        //znajdz late finish
+        if(nextNode.getLateStartTime() < lateEndTime) {
+            lateEndTime = nextNode.getLateStartTime();
+        }
 
-        //kiedy otrzyma wszystkie informacje od następników wyślij polecenie w tył
+        //kiedy otrzyma wszystkie informacje od wszystkich następników
         backPropagateCounter++;
         if(backPropagateCounter == previousNodes.size()) {
             backPropagateCounter = 0;
+            //ustal czas pozniego poczaktu
+            lateStartTime = lateEndTime - workTime;
+            //policz zapas
+            reserveTime = lateEndTime - earlyStartTime;
+            //scieszka krytyczna??
+            if(reserveTime == 0) {
+                criticalPath = true;
+            }
+            //wyślij sygnał w tył
             for(Node n : previousNodes) {
-                n.backPropagate();
+                n.backPropagate(this);
             }
         }
     }
