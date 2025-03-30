@@ -59,6 +59,17 @@ public class Node {
             for(Node n : nextNodes) {
                 n.frontPropagate(this);
             }
+
+            //bumper node
+            if(nextNodes.isEmpty()) {
+                lateStartTime = earlyStartTime;
+                lateEndTime = earlyEndTime;
+                reserveTime = 0;
+                criticalPath = true;
+                for(Node n : previousNodes) {
+                    n.backPropagate(this);
+                }
+            }
         }
 
     }
