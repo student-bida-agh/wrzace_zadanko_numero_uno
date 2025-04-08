@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Node {
     //Pola Realizujące strukture danych
-    private List<Node> nextNodes;
-    private List<Node> previousNodes;
+    List<Node> nextNodes;
+    List<Node> previousNodes;
     private int frontPropagateCounter;
     private int backPropagateCounter;
 
@@ -20,11 +20,14 @@ public class Node {
     private boolean criticalPath;
 
     Node(){
-        earlyStartTime = earlyEndTime = 0
+        earlyStartTime = earlyEndTime = 0;
         lateStartTime = lateEndTime = Double.MAX_VALUE;
         reserveTime = 0;
-        criticalPath = False;
+        criticalPath = false;
     }
+    public void setName(String name){this.name = name;}
+
+   public void setWorkTime(double workTime){this.workTime = workTime;}
 
     public double getEarlyEndTime() {
         return earlyEndTime;
