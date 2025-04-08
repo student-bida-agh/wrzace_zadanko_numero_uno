@@ -23,6 +23,7 @@ public class Node {
         earlyStartTime = earlyEndTime = 0
         lateStartTime = lateEndTime = Double.MAX_VALUE;
         reserveTime = 0;
+        criticalPath = False;
     }
 
     public double getEarlyEndTime() {
