@@ -20,7 +20,8 @@ public class Node {
     private boolean criticalPath;
 
     Node(){
-        earlyStartTime = earlyEndTime = lateStartTime = lateEndTime = 0;
+        earlyStartTime = earlyEndTime = 0
+        lateStartTime = lateEndTime = Double.MAX_VALUE;
         reserveTime = 0;
     }
 
