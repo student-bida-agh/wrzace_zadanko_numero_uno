@@ -29,6 +29,18 @@ public class Node {
 
    public void setWorkTime(double workTime){this.workTime = workTime;}
 
+    public String getName() {
+        return name;
+    }
+
+    boolean isCriticalPath() {
+        return criticalPath;
+    }
+
+    public double getReserveTime() {
+        return reserveTime;
+    }
+
     public double getEarlyEndTime() {
         return earlyEndTime;
     }

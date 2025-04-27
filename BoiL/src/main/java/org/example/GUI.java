@@ -41,12 +41,11 @@ public class GUI extends JFrame{
                 nodeManager.connectNodes(selectedFilePath);
 
                 List<Node> allNodes = nodeManager.getNodes();
-                Node specificNode = nodeManager.getNodeByName("A");
-                specificNode.frontPropagate(null);
-                for(Node node : allNodes) {
-                    System.out.println("Early start time: " + node.getEarlyStartTime());
-                    System.out.println("Early end time: " + node.getEarlyEndTime());
+                Node specificNode = nodeManager.getNodeByName("Start");
+                for(Node node : specificNode.nextNodes){
+                    node.backPropagate(node);
                 }
+                new CPMResultsWindow(allNodes);
             }
         });
     }
