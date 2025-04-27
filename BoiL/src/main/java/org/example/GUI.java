@@ -42,7 +42,11 @@ public class GUI extends JFrame{
 
                 List<Node> allNodes = nodeManager.getNodes();
                 Node specificNode = nodeManager.getNodeByName("A");
-                System.out.println("Specific Node: " + specificNode);
+                specificNode.frontPropagate(null);
+                for(Node node : allNodes) {
+                    System.out.println("Early start time: " + node.getEarlyStartTime());
+                    System.out.println("Early end time: " + node.getEarlyEndTime());
+                }
             }
         });
     }
