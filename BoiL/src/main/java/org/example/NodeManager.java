@@ -89,6 +89,16 @@ public class NodeManager {
         }
     }
 
+    public void calculate(){
+        Node startNode = getNodeByName("Start");
+        //Przydałoby się zrobić pole start node w managarze i przypisywać je w trakcie łączenia
+        for(Node node : startNode.nextNodes){
+            node.frontPropagate(startNode);
+        }
+    }
+
+
+
     // Helper method to get a node by name
     public Node getNodeByName(String name) {
         return nodeMap.get(name);

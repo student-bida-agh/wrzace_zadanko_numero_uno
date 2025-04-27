@@ -39,12 +39,9 @@ public class GUI extends JFrame{
 
                 nodeManager.loadNodes(selectedFilePath);
                 nodeManager.connectNodes(selectedFilePath);
-
+                nodeManager.calculate();
                 List<Node> allNodes = nodeManager.getNodes();
-                Node specificNode = nodeManager.getNodeByName("Start");
-                for(Node node : specificNode.nextNodes){
-                    node.backPropagate(node);
-                }
+
                 new CPMResultsWindow(allNodes);
             }
         });

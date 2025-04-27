@@ -61,13 +61,13 @@ public class Node {
         //obliczenia zadawane przez poprzedników
 
         //znajdz early start
-        if(previousNode.getEarlyEndTime() > earlyEndTime) {
+        if(previousNode.getEarlyEndTime() > earlyStartTime) {
             earlyStartTime = previousNode.getEarlyEndTime();
         }
 
         //kiedy otrzyma wszystkie informacje od wszystkich poprzedników
         frontPropagateCounter++;
-        if(frontPropagateCounter == nextNodes.size()) {
+        if(frontPropagateCounter == previousNodes.size()) {
             frontPropagateCounter = 0;
             //ustal czas wczesnego końca
             earlyEndTime = earlyStartTime + workTime;
@@ -100,12 +100,12 @@ public class Node {
 
         //kiedy otrzyma wszystkie informacje od wszystkich następników
         backPropagateCounter++;
-        if(backPropagateCounter == previousNodes.size()) {
+        if(backPropagateCounter == nextNodes.size()) {
             backPropagateCounter = 0;
             //ustal czas pozniego poczaktu
             lateStartTime = lateEndTime - workTime;
             //policz zapas
-            reserveTime = lateEndTime - earlyStartTime;
+            reserveTime = lateEndTime - earlyEndTime;
             //scieszka krytyczna??
             if(reserveTime == 0) {
                 criticalPath = true;
