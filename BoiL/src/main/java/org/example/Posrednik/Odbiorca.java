@@ -10,4 +10,13 @@ public class Odbiorca {
         this.cena = cena;
         this.maxPopyt = maxPopyt;
     }
+
+    @Override
+    public String toString() {
+        return "Odbiorca{" +
+                "nazwa='" + nazwa + '\'' +
+                ", cena=" + cena +
+                ", maxPopyt=" + maxPopyt +
+                '}';
+    }
 }

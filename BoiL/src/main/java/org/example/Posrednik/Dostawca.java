@@ -10,4 +10,13 @@ public class Dostawca {
         this.koszt = koszt;
         this.maxProdukcja = maxProdukcja;
     }
+
+    @Override
+    public String toString() {
+        return "Dostawca{" +
+                "nazwa='" + nazwa + '\'' +
+                ", koszt=" + koszt +
+                ", maxProdukcja=" + maxProdukcja +
+                '}';
+    }
 }

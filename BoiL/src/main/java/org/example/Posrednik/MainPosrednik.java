@@ -26,7 +26,10 @@ public class MainPosrednik {
             transportkoszt.add(costRow);
         }
         Posrednik test = new Posrednik(dostawcy, odbiorcy, transportkoszt);
-
+        test.printSummary();
+        test.calculate();
+        test.printTransport();
+        System.out.println("dochod = " + test.funkcjaCelu());
 
     }
 }
