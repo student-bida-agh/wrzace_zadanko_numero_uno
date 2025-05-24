@@ -17,7 +17,7 @@ public class Posrednik {
         this.odbiorcaList = odbiorcas;
         this.macierzKosztowTransportu = kosztyTransportu;
     }
-    public void obliczZyskJednostkowy{
+    public void obliczZyskJednostkowy(){
         int iloscDostawcow = macierzWielkosciTransportu.size();
         int iloscOdbiorcow = macierzWielkosciTransportu.get(iloscDostawcow).size();
         double[][] zyskJednostokowyArray = new double[iloscDostawcow][iloscOdbiorcow];
