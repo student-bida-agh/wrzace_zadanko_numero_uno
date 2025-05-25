@@ -10,7 +10,7 @@ public class Posrednik {
     // indeks - j - odbiorca
     private ArrayList<ArrayList<Double>> macierzKosztowTransportu;
     public ArrayList<ArrayList<Double>> macierzWielkosciTransportu;
-    private ArrayList<ArrayList<Double>> zyskJednostokowy = new ArrayList<>();
+    public ArrayList<ArrayList<Double>> zyskJednostokowy = new ArrayList<>();
     private List<Double> pozostalyPopyt = new ArrayList<>();
     private List<Double> pozostalaPodaz = new ArrayList<>();
     //persistent data for base solution
@@ -30,6 +30,59 @@ public class Posrednik {
             macierzWielkosciTransportu.add(nrow);
         }
     }
+
+    public ArrayList<ArrayList<Double>> getMacierzTransportowa() {
+        return macierzWielkosciTransportu;
+    }
+
+    public double getPrzychodCalkowity() {
+        double suma = 0.0;
+        for (int i = 0; i < macierzWielkosciTransportu.size(); i++) {
+            int limit = Math.min(macierzWielkosciTransportu.get(i).size(), odbiorcaList.size());
+            for (int j = 0; j < limit; j++) {
+                double ilosc = macierzWielkosciTransportu.get(i).get(j);
+                double cena = odbiorcaList.get(j).cena;
+                suma += ilosc * cena;
+            }
+        }
+        return suma;
+    }
+
+
+    public double getKosztCalkowityZakupu() {
+        double koszt = 0.0;
+        int limit = Math.min(macierzWielkosciTransportu.size(), dostawcaList.size());
+        for (int i = 0; i < limit; i++) {
+            for (int j = 0; j < macierzWielkosciTransportu.get(i).size(); j++) {
+                double ilosc = macierzWielkosciTransportu.get(i).get(j);
+                double kosztDostawcy = dostawcaList.get(i).koszt;
+                koszt += ilosc * kosztDostawcy;
+            }
+        }
+        return koszt;
+    }
+
+
+    public double getKosztCalkowityTransportu() {
+        double suma = 0.0;
+        int limit = Math.min(macierzWielkosciTransportu.size(), dostawcaList.size());
+        for (int i = 0; i < limit; i++) {
+            for (int j = 0; j < macierzWielkosciTransportu.get(i).size(); j++) {
+                double ilosc = macierzWielkosciTransportu.get(i).get(j);
+                double kosztTransportu = macierzKosztowTransportu.get(i).get(j);
+                suma += ilosc * kosztTransportu;
+            }
+        }
+        return suma;
+    }
+
+    public double getZyskCalkowity() {
+        // zysk = przychód - koszt zakupu - koszt transportu
+        return getPrzychodCalkowity() - getKosztCalkowityZakupu() - getKosztCalkowityTransportu();
+    }
+
+
+
     public void obliczZyskJednostkowy(){
         int iloscDostawcow = macierzWielkosciTransportu.size();
         int iloscOdbiorcow = macierzWielkosciTransportu.get(iloscDostawcow-1).size();
