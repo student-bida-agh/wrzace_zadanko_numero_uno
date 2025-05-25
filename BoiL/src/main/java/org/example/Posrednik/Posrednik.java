@@ -9,7 +9,7 @@ public class Posrednik {
     // indeks - i - dostawca
     // indeks - j - odbiorca
     private ArrayList<ArrayList<Double>> macierzKosztowTransportu;
-    private ArrayList<ArrayList<Double>> macierzWielkosciTransportu;
+    public ArrayList<ArrayList<Double>> macierzWielkosciTransportu;
     private ArrayList<ArrayList<Double>> zyskJednostokowy = new ArrayList<>();
     private List<Double> pozostalyPopyt = new ArrayList<>();
     private List<Double> pozostalaPodaz = new ArrayList<>();
