@@ -215,11 +215,134 @@ public class Posrednik {
         }
         return dochod;
     }
+    public void rozwiazUkladRownan(double[] alpha, double[] beta, int m, int n){
+        ArrayList<Z> z = new ArrayList<>();
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(macierzWielkosciTransportu.get(i).get(j) > 0){
+                    z.add(new Z(zyskJednostokowy.get(i).get(j), i, j));
+                }
+            }
+        }
+
+        boolean[] knownAlpha = new boolean[m];
+        boolean[] knownBeta = new boolean[n];
+        knownAlpha[m-1] = true;
+        knownBeta[n-1] = true;
+
+        for(int i = z.size() - 1; i >= 0; i--){
+            int alphaid = z.get(i).i;
+            int betaid = z.get(i).j;
+            double zval = z.get(i).val;
+            if (knownAlpha[alphaid]){
+                beta[betaid] = zval - alpha[alphaid];
+                knownBeta[betaid] = true;
+            }
+            else if (knownBeta[betaid]){
+                alpha[alphaid] = zval - beta[betaid];
+                knownAlpha[alphaid] = true;
+            }
+            else{
+                throw new RuntimeException("W trakcie liczenia alpha i beta cos sie zjebalo, trzeba szukac innego sposobu pewie");
+            }
+        }
+    }
+    private boolean obliczDelte(ArrayList<Z> delta,double[] alpha, double[] beta, int m, int n) {
+        ArrayList<Z> z = new ArrayList<>();
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(macierzWielkosciTransportu.get(i).get(j) == 0){
+                    z.add(new Z(zyskJednostokowy.get(i).get(j), i, j));
+                }
+            }
+        }
+        boolean allneg = true;
+        for(int i = 0; i < z.size(); i++){
+            int idi = z.get(i).i;
+            int idj = z.get(i).j;
+            double zval = z.get(i).val;
+            double deltaval = zval - alpha[idi] - beta[idj];
+            if(deltaval > 0) allneg = false;
+            delta.add(new Z(deltaval, idi, idj));
+        }
+        return allneg;
+    }
+    public void optymalizacja(){
+        int i = zyskJednostokowy.size();
+        int j = zyskJednostokowy.get(i-1).size();
+        double[] alpha = new double[i];
+        double[] beta = new double[j];
+        alpha[i-1] = 0;
+        beta[j-1] = 0;
+        boolean warunekStopu = true;
+        while(warunekStopu){
+            rozwiazUkladRownan(alpha, beta, i, j);
+            ArrayList<Z> deltas = new ArrayList<>();
+            warunekStopu = obliczDelte(deltas, alpha, beta, i, j);
+            //pętla zmian
+            if(!warunekStopu){
+                for(int k = 0; k < deltas.size(); k++){
+                    if(deltas.get(k).val > 0){
+                        // pierwszy plus to delta[k]
+                        int plus1i = deltas.get(k).i;
+                        int plus1j = deltas.get(k).j;
+                        // znajdz minusy
+                        ArrayList<Z> minus = new ArrayList<>();
+                        //gora check
+                        if(plus1i - 1 > 0){
+                            if(macierzWielkosciTransportu.get(plus1i - 1).get(plus1j) > 0){
+                                minus.add(new Z(macierzWielkosciTransportu.get(plus1i - 1).get(plus1j),plus1i - 1, plus1j));
+                            }
+                        }
+                        //lewo czeck
+                        if(plus1j - 1 > 0){
+                            if(macierzWielkosciTransportu.get(plus1i).get(plus1j - 1) > 0){
+                                minus.add(new Z(macierzWielkosciTransportu.get(plus1i).get(plus1j - 1),plus1i, plus1j-1));
+                            }
+                        }
+                        //doł czek
+                        if(plus1i + 1 < i){
+                            if(macierzWielkosciTransportu.get(plus1i + 1).get(plus1j) > 0){
+                                minus.add(new Z(macierzWielkosciTransportu.get(plus1i + 1).get(plus1j),plus1i + 1, plus1j));
+                            }
+                        }
+                        //prawochek
+                        if(plus1j + 1 < j){
+                            if(macierzWielkosciTransportu.get(plus1i).get(plus1j + 1) > 0){
+                                minus.add(new Z(macierzWielkosciTransportu.get(plus1i).get(plus1j + 1),plus1i, plus1j+1));
+                            }
+                        }
+                        //znajdz min value podmianki
+                        double minval = minus.get(0).val;
+                        if(minval > minus.get(1).val) minval = minus.get(1).val;
+                        //podmien
+                        macierzWielkosciTransportu.get(plus1i).set(plus1j, macierzWielkosciTransportu.get(plus1i).get(plus1j) + minval);
+                        int min1i = minus.get(0).i;
+                        int min1j = minus.get(0).j;
+                        macierzWielkosciTransportu.get(min1i).set(min1j, macierzWielkosciTransportu.get(min1i).get(min1j) - minval);
+                        int min2i = minus.get(1).i;
+                        int min2j = minus.get(1).j;
+                        macierzWielkosciTransportu.get(min2i).set(min2j, macierzWielkosciTransportu.get(min2i).get(min2j) - minval);
+                        int plus2i, plus2j;
+                        if(plus1i == min1i) plus2j = min1j;
+                        else plus2j = min2j;
+                        if(plus1j == min1j) plus2i = min1i;
+                        else plus2i = min2i;
+                        macierzWielkosciTransportu.get(plus2i).set(plus2j, macierzWielkosciTransportu.get(plus2i).get(plus2j) + minval);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
     public void calculate(){
         obliczZyskJednostkowy();
         incjalizacjaPopytuPodazy();
         dostawcyOdbiorcyFikcyjni();
         bazoweRozwiazanie();
+        optymalizacja();
     }
 
     public void printTransport(){
