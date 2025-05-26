@@ -243,7 +243,7 @@ public class Posrednik {
                 knownAlpha[alphaid] = true;
             }
             else{
-                throw new RuntimeException("W trakcie liczenia alpha i beta cos sie zjebalo, trzeba szukac innego sposobu pewie");
+                throw new RuntimeException(" D: !!!");
             }
         }
     }
@@ -342,7 +342,7 @@ public class Posrednik {
         incjalizacjaPopytuPodazy();
         dostawcyOdbiorcyFikcyjni();
         bazoweRozwiazanie();
-        optymalizacja();
+        //optymalizacja();
     }
 
     public void printTransport(){
